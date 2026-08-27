@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Mission ❤️</title>
+  <meta name="description" content="A little birthday mission from India to Canada ❤️" />
+  <style>
+    :root{
+      --bg:#0b0712;
+      --bg2:#160b20;
+      --pink:#ff5c93;
+      --pink2:#ff8fb4;
+      --rose:#ffcadc;
+      --text:#fff8fb;
+      --muted:#cbb6c2;
+      --card:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.13);
+      --shadow:0 20px 70px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,92,147,.18), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(151,90,255,.15), transparent 28%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 50%,#09060d);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    button{
+      border:0;
+      cursor:pointer;
+      font:inherit;
+    }
+    .container{width:min(1100px,92%);margin:auto}
+    .section{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      padding:90px 0;
+      position:relative;
+    }
+    .center{text-align:center}
+    .eyebrow{
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:.78rem;
+      color:var(--rose);
+      opacity:.9;
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1{
+      font-size:clamp(3rem,9vw,7rem);
+      line-height:.9;
+      margin:18px 0;
+      letter-spacing:-.06em;
+    }
+    h2{
+      font-size:clamp(2.2rem,6vw,4.6rem);
+      line-height:1;
+      letter-spacing:-.045em;
+      margin-bottom:18px;
+    }
+    p.lead{
+      max-width:720px;
+      margin:0 auto 28px;
+      font-size:clamp(1rem,2vw,1.25rem);
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .hero{
+      overflow:hidden;
+    }
+    .hero-orb{
+      position:absolute;
+      width:380px;height:380px;border-radius:50%;
+      background:rgba(255,92,147,.12);
+      filter:blur(70px);
+      top:5%;left:50%;transform:translateX(-50%);
+      pointer-events:none;
+    }
+    .sparkles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .sparkle{
+      position:absolute;
+      opacity:.5;
+      animation:float 6s ease-in-out infinite;
+      user-select:none;
+    }
+    @keyframes float{50%{transform:translateY(-18px) rotate(6deg);opacity:.9}}
+    .badge{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);border-radius:999px;
+      color:var(--rose);font-size:.9rem;
+    }
+    .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{
+      padding:14px 22px;border-radius:999px;
+      background:linear-gradient(135deg,var(--pink),#ff3b72);
+      color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(255,92,147,.22);
+      transition:.2s transform,.2s filter;
+    }
+    .btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+    .btn.secondary{
+      background:rgba(255,255,255,.07);
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+    .panel{
+      padding:28px;border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(14px);
+      border-radius:28px;box-shadow:var(--shadow);
+    }
+
+    /* modal */
+    .modal{
+      position:fixed;inset:0;z-index:100;
+      display:none;place-items:center;
+      background:rgba(4,2,8,.8);backdrop-filter:blur(10px);
+      padding:20px;
+    }
+    .modal.show{display:grid}
+    .modal-card{width:min(620px,100%);position:relative}
+    .close{
+      position:absolute;top:14px;right:14px;
+      width:36px;height:36px;border-radius:50%;
+      background:rgba(255,255,255,.08);color:#fff;
+    }
+    .question{
+      font-size:clamp(1.5rem,4vw,2.4rem);
+      margin:0 0 20px;
+    }
+    .answer-grid{display:grid;gap:12px}
+    .answer{
+      padding:15px 18px;border-radius:16px;
+      background:rgba(255,255,255,.06);border:1px solid var(--line);
+      color:#fff;text-align:left;
+      transition:.2s;
+    }
+    .answer:hover{background:rgba(255,92,147,.12);transform:translateY(-1px)}
+    .quiz-progress{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+    .result{font-size:1.4rem;line-height:1.5}
+
+    /* timeline */
+    .timeline{position:relative;max-width:860px;margin:40px auto 0}
+    .timeline:before{
+      content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;
+      transform:translateX(-50%);background:linear-gradient(var(--pink),transparent);
+      opacity:.35;
+    }
+    .memory{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:40px 0;align-items:center}
+    .memory:nth-child(even) .memory-copy{order:-1}
+    .memory img,.photo-placeholder{
+      width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:24px;
+      border:1px solid var(--line);background:linear-gradient(135deg,#241228,#160c20);
+      box-shadow:var(--shadow);
+    }
+    .photo-placeholder{
+      display:grid;place-items:center;color:var(--muted);font-size:.9rem;text-align:center;padding:20px;
+    }
+    .memory-copy h3{font-size:1.6rem;margin-bottom:8px}
+    .memory-copy p{color:var(--muted);line-height:1.7;margin:0}
+    .memory-tag{display:inline-block;color:var(--rose);font-size:.82rem;margin-bottom:10px}
+
+    /* distance */
+    .route{
+      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+      gap:20px;max-width:850px;margin:40px auto;
+    }
+    .country{
+      text-align:center;padding:24px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);border-radius:24px;
+    }
+    .country .flag{font-size:4rem}
+    .country h3{margin:10px 0 4px}
+    .country small{color:var(--muted)}
+    .plane{text-align:center;color:var(--rose)}
+    .plane .icon{font-size:3rem;display:block;animation:plane 3s ease-in-out infinite}
+    @keyframes plane{50%{transform:translateX(14px) translateY(-4px) rotate(-5deg)}}
+
+    /* gifts */
+    .gift-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:35px}
+    .gift{
+      min-height:180px;border-radius:22px;border:1px solid var(--line);
+      background:linear-gradient(145deg,rgba(255,92,147,.12),rgba(255,255,255,.04));
+      color:#fff;padding:18px;display:flex;flex-direction:column;align-items:center;
+      justify-content:center;transition:.25s;position:relative;overflow:hidden;
+    }
+    .gift:hover{transform:translateY(-4px)}
+    .gift.locked{opacity:.5;filter:grayscale(.5)}
+    .gift-icon{font-size:3rem}
+    .gift-title{font-weight:800;margin-top:9px}
+    .gift small{color:var(--muted);margin-top:6px}
+
+    /* hearts */
+    .heart-game{
+      min-height:440px;position:relative;overflow:hidden;border-radius:28px;
+      background:radial-gradient(circle at center,rgba(255,92,147,.1),rgba(255,255,255,.03));
+      border:1px solid var(--line);
+    }
+    .heart{
+      position:absolute;
+      font-size:2rem;
+      animation:pulse 1.6s infinite;
+      filter:drop-shadow(0 7px 14px rgba(255,92,147,.3));
+    }
+    .heart:hover{transform:scale(1.25)}
+    @keyframes pulse{50%{transform:scale(1.1)}}
+    .game-status{
+      margin-top:14px;color:var(--rose);font-weight:700;text-align:center;
+    }
+
+    /* final */
+    #final{
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,92,147,.08), transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(151,90,255,.06), transparent 35%),
+        linear-gradient(180deg,#09060d,#0a0510 50%,#08040c);
+    }
+    .letter{
+      max-width:800px;margin:auto;text-align:center;
+      padding:42px 28px;border-radius:30px;
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid rgba(255,92,147,.15);box-shadow:var(--shadow);
+    }
+    .letter p{
+      color:#f3e8ed;font-size:clamp(1.05rem,2vw,1.25rem);
+      line-height:1.9;max-width:650px;margin:0 auto;
+    }
+    .typed{min-height:160px}
+    .final-question{margin-top:38px}
+    .big-yes{
+      font-size:1.1rem;padding:16px 28px;
+    }
+
+    /* Stars for final section */
+    .stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .star{
+      position:absolute;font-size:.8rem;color:var(--rose);
+      animation:twinkle 3s ease-in-out infinite;
+      opacity:.6;
+    }
+    @keyframes twinkle{50%{opacity:1;transform:scale(1.2)}}
+
+    footer{padding:30px 0 60px;text-align:center;color:#9e8793;font-size:.85rem}
+
+    /* confetti */
+    #confetti{position:fixed;inset:0;pointer-events:none;z-index:150;overflow:hidden}
+    .confetti-piece{
+      position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;
+      animation:fall 2.8s linear forwards;
+    }
+    @keyframes fall{
+      to{transform:translateY(115vh) rotate(760deg)}
+    }
+
+    /* countdown */
+    .countdown{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+      width:min(520px,100%);margin:28px auto;
+    }
+    .time-box{
+      padding:14px 8px;border-radius:18px;background:rgba(255,255,255,.05);
+      border:1px solid var(--line)
+    }
+    .time-box strong{display:block;font-size:1.7rem}
+    .time-box span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+    @media(max-width:800px){
+      .timeline:before{display:none}
+      .memory{grid-template-columns:1fr;gap:15px}
+      .memory:nth-child(even) .memory-copy{order:initial}
+      .gift-grid{grid-template-columns:repeat(2,1fr)}
+      .route{grid-template-columns:1fr}
+      .plane{order:2}
+    }
+    @media(max-width:520px){
+      .section{padding:70px 0}
+      .gift-grid{grid-template-columns:1fr}
+      .countdown{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- PASSWORD SCREEN -->
+  <div class="modal show" id="passwordModal" style="z-index:300">
+    <div class="modal-card panel center">
+      <div class="eyebrow">🔐 RESTRICTED ACCESS</div>
+      <h2 style="margin:16px 0">Enter the secret code</h2>
+      <p class="lead">This birthday surprise is classified.</p>
+      <input type="text" id="passwordInput" placeholder="Enter code..." 
+             style="width:100%;max-width:280px;padding:14px;border-radius:12px;border:1px solid var(--line);
+                    background:rgba(255,255,255,.08);color:#fff;font-size:1.1rem;text-align:center;margin:20px 0;
+                    outline:none" onkeypress="if(event.key==='Enter')checkPassword()">
+      <p style="margin-top:12px;color:var(--muted);font-size:.85rem;font-style:italic">The year sagar's favorite person came into this world. ❤️</p>
+      <div class="btns" style="margin-top:16px">
+        <button class="btn" onclick="checkPassword()">Unlock ❤️</button>
+      </div>
+      <p id="passwordError" style="margin-top:16px;color:var(--rose);font-weight:700;min-height:24px"></p>
+    </div>
+  </div>
+
+  <!-- VERIFICATION SCREEN -->
+  <div class="modal" id="verificationModal" style="z-index:200">
+    <div class="modal-card panel center">
+      <div class="eyebrow">🚨 TOP SECRET MISSION</div>
+      <h2 style="margin:16px 0">Before we continue...</h2>
+      <p class="lead">Are you actually <strong id="verifyName">AMMU</strong>?</p>
+      <div class="btns" style="margin-top:24px">
+        <button class="btn" onclick="verifyYes()">YES ❤️</button>
+        <button class="btn secondary" id="noBtn" onclick="verifyNo()">NO</button>
+      </div>
+      <p id="verifyMessage" style="margin-top:20px;color:var(--rose);font-weight:700;min-height:24px"></p>
+    </div>
+  </div>
+
+  <div class="sparkles" aria-hidden="true">
+    <span class="sparkle" style="left:8%;top:20%">✦</span>
+    <span class="sparkle" style="left:18%;top:68%;animation-delay:1s">✧</span>
+    <span class="sparkle" style="left:78%;top:15%;animation-delay:2s">✦</span>
+    <span class="sparkle" style="left:88%;top:60%;animation-delay:.5s">✧</span>
+    <span class="sparkle" style="left:55%;top:45%;animation-delay:1.5s">✦</span>
+  </div>
+
+  <main id="mainContent" style="display:none">
+    <!-- HERO -->
+    <section class="section hero" id="start">
+      <div class="hero-orb"></div>
+      <div class="container center">
+        <div class="badge">🚨 TOP SECRET • BIRTHDAY PROTOCOL</div>
+        <div class="eyebrow" style="margin-top:24px">Mission control • India 🇮🇳</div>
+        <h1>Happy Birthday,<br><span style="color:var(--pink2)">My Favorite Person ❤️</span></h1>
+        <p class="lead">
+          Agent <strong id="wifeNameText">AMMU</strong>, your mission is simple:
+          survive the birthday quiz, collect the gifts, find the hidden hearts,
+          and reach the top-secret final message.
+        </p>
+
+        <div class="countdown" id="countdown">
+          <div class="time-box"><strong id="days">--</strong><span>Days</span></div>
+          <div class="time-box"><strong id="hours">--</strong><span>Hours</span></div>
+          <div class="time-box"><strong id="mins">--</strong><span>Minutes</span></div>
+          <div class="time-box"><strong id="secs">--</strong><span>Seconds</span></div>
+        </div>
+
+        <div class="btns">
+          <button class="btn" onclick="startMission()">Start My Birthday Mission ❤️</button>
+          <button class="btn secondary" onclick="document.getElementById('story').scrollIntoView()">Skip to Memories</button>
+        </div>
+        <p style="margin-top:18px;color:#9e8793;font-size:.82rem">Tip: turn on your sound when you reach the music section 🎵</p>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="section" id="quiz">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Stage 1</div>
+          <h2>How well do you know your husband? 😏</h2>
+          <p class="lead">There are no wrong answers. Except the wrong ones. Those are obviously wrong.</p>
+          <button class="btn" onclick="openQuiz()">Begin Husband Examination</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="section" id="story">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Stage 2</div>
+          <h2>Our little story ❤️</h2>
+          <p class="lead">Replace the placeholders below with your favorite photos and memories.</p>
+        </div>
+
+        <div class="timeline">
+          <article class="memory">
+            <img src="assets/photo1.jpg" alt="Our first photo" class="memory-photo">
+            <div class="memory-copy">
+              <span class="memory-tag">THE BEGINNING</span>
+              <h3>And then you happened.</h3>
+              <p>I didn't know one person could become such a huge part of my life. Somehow, you did. ❤️</p>
+            </div>
+          </article>
+
+          <article class="memory">
+            <img src="assets/photo2.jpeg" alt="Favorite memory" class="memory-photo">
+            <div class="memory-copy">
+              <span class="memory-tag">FAVORITE MEMORY</span>
+              <h3>Still one of my favorite days.</h3>
+              <!-- <p>Put your own little story here — a funny moment, a trip, a date, or something only the two of you understand.</p> -->
+            </div>
+          </article>
+
+          <article class="memory">
+            <img src="assets/photo3.jpg" alt="Special photo" class="memory-photo">
+            <div class="memory-copy">
+              <span class="memory-tag">US</span>
+              <h3>My favorite team.</h3>
+              <p>Life became much more interesting, much more chaotic, and a lot more beautiful after you became my person.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DISTANCE -->
+    <section class="section" id="distance">
+      <div class="container center">
+        <div class="eyebrow">Stage 3</div>
+        <h2>Different countries.<br>Same heart. 🌍</h2>
+        <p class="lead">Right now you're in Canada and I'm in India. The map says we're far apart. I disagree.</p>
+
+        <div class="route">
+          <div class="country">
+            <div class="flag">🇮🇳</div>
+            <h3>India</h3>
+            <small>Mission Control</small>
+          </div>
+          <div class="plane">
+            <span class="icon">✈️</span>
+            <strong>far in kilometres<br>zero in love</strong>
+          </div>
+          <div class="country">
+            <div class="flag">🇨🇦</div>
+            <h3>Canada</h3>
+            <small>Birthday HQ</small>
+          </div>
+        </div>
+
+        <div class="panel" style="max-width:760px;margin:auto">
+          <div style="font-size:2rem">📏</div>
+          <h3 style="font-size:1.8rem;margin:8px 0">Physical distance: very far.</h3>
+          <p style="margin:0;color:var(--muted)">Emotional distance: <strong style="color:var(--rose)">0 km ❤️</strong></p>
+        </div>
+
+        <div class="panel" style="max-width:760px;margin:auto;margin-top:24px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:center">
+            <div>
+              <div style="font-size:1.5rem">🇮🇳</div>
+              <div style="font-weight:700;margin:8px 0">India time</div>
+              <div id="indiaTime" style="font-size:1.4rem;color:var(--rose)">--:--</div>
+            </div>
+            <div>
+              <div style="font-size:1.5rem">🇨🇦</div>
+              <div style="font-weight:700;margin:8px 0">Canada time</div>
+              <div id="canadaTime" style="font-size:1.4rem;color:var(--rose)">--:--</div>
+            </div>
+          </div>
+          <p style="margin-top:16px;color:var(--muted);font-size:.9rem">Different clocks. Same love. ❤️</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GIFTS -->
+    <section class="section" id="gifts">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Stage 4</div>
+          <h2>Birthday treasure 🎁</h2>
+          <p class="lead">Five tiny gifts. One of them is classified.</p>
+        </div>
+
+        <div class="gift-grid">
+          <button class="gift" onclick="openGift(1)">
+            <div class="gift-icon">🎁</div>
+            <div class="gift-title">Gift #1</div>
+            <small>Open for a terrible joke</small>
+          </button>
+          <button class="gift" onclick="openGift(2)">
+            <div class="gift-icon">📸</div>
+            <div class="gift-title">Gift #2</div>
+            <small>A little memory</small>
+          </button>
+          <button class="gift" onclick="openGift(3)">
+            <div class="gift-icon">🎙️</div>
+            <div class="gift-title">Gift #3</div>
+            <small>Your husband's voice</small>
+          </button>
+          <button class="gift" onclick="openGift(4)">
+            <div class="gift-icon">💌</div>
+            <div class="gift-title">Gift #4</div>
+            <small>One unlimited hug coupon</small>
+          </button>
+          <button class="gift locked" id="gift5" onclick="openGift(5)">
+            <div class="gift-icon">🔒</div>
+            <div class="gift-title">Gift #5</div>
+            <small>Locked until the hearts are found</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HEART GAME -->
+    <section class="section" id="hearts">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Stage 5</div>
+          <h2>Find the hidden hearts ❤️</h2>
+          <p class="lead">There are five. Click every heart to unlock the final gift.</p>
+        </div>
+
+        <div class="heart-game" id="heartGame"></div>
+        <div class="game-status" id="gameStatus">0 / 5 hearts found</div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="section" id="final">
+      <div class="stars" id="stars"></div>
+      <div class="container">
+        <div class="letter">
+          <div class="eyebrow">TOP SECRET • FINAL MESSAGE</div>
+          <h2 style="margin-top:16px">For my love ❤️</h2>
+          <p class="typed" id="typedMessage"></p>
+
+          <!-- <div style="margin:28px 0">
+            <button class="btn secondary" onclick="toggleSong()" id="songButton">🎵 Play our song</button>
+            <audio id="ourSong" preload="none">
+            
+            </audio>
+          </div> -->
+
+          <div class="final-question">
+            <div class="eyebrow">ONE LAST QUESTION</div>
+            <h3 style="font-size:clamp(1.8rem,5vw,3rem);margin:12px 0 20px">Would you choose me again?</h3>
+            <div class="btns">
+              <button class="btn big-yes" onclick="yesAnswer()">YES ❤️</button>
+              <button class="btn secondary big-yes" onclick="yesAnswer()">Obviously 😌</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Made with love from India 🇮🇳 → Canada 🇨🇦 • Birthday Protocol 2026 ❤️
+  </footer>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-card panel">
+      <button class="close" onclick="closeModal('quizModal')">✕</button>
+      <div class="quiz-progress" id="quizProgress"></div>
+      <h3 class="question" id="quizQuestion"></h3>
+      <div class="answer-grid" id="answers"></div>
+    </div>
+  </div>
+
+  <!-- GIFT MODAL -->
+  <div class="modal" id="giftModal">
+    <div class="modal-card panel center">
+      <button class="close" onclick="closeModal('giftModal')">✕</button>
+      <div id="giftContent"></div>
+    </div>
+  </div>
+
+  <div id="confetti"></div>
+
+  <script>
+    // ============================
+    // PASSWORD PROTECTION (Global functions for HTML access)
+    // ============================
+    function checkPassword(){
+      const input = document.getElementById("passwordInput");
+      const error = document.getElementById("passwordError");
+      const correctPassword = "1997";
+      
+      if(input.value === correctPassword){
+        document.getElementById("passwordModal").classList.remove("show");
+        document.getElementById("verificationModal").classList.add("show");
+      } else {
+        error.textContent = "Access denied. Try again! 😏";
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    function verifyYes(){
+      const msg = document.getElementById("verifyMessage");
+      msg.textContent = "Verification successful ✅";
+      msg.style.color = "#4ade80";
+      
+      setTimeout(() => {
+        msg.textContent = "Wife identified.";
+        setTimeout(() => {
+          msg.textContent = "Starting birthday protocol...";
+          setTimeout(() => {
+            document.getElementById("verificationModal").classList.remove("show");
+            document.getElementById("mainContent").style.display = "block";
+            document.body.style.overflow = "auto";
+          }, 1500);
+        }, 1500);
+      }, 1500);
+    }
+    
+    let noClickCount = 0;
+    
+    function verifyNo(){
+      const btn = document.getElementById("noBtn");
+      const msg = document.getElementById("verifyMessage");
+      noClickCount++;
+      
+      const messages = [
+        "Hmm... suspicious.",
+        "I know my wife better than this. 😒",
+        "Are you sure about that?",
+        "This button seems to have a mind of its own..."
+      ];
+      
+      msg.textContent = messages[Math.min(noClickCount - 1, messages.length - 1)];
+      
+      // Move the button around
+      const randomX = Math.random() * 200 - 100;
+      const randomY = Math.random() * 100 - 50;
+      btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      btn.style.transition = "transform 0.3s ease";
+    }
+
+    function startMission(){
+      document.getElementById("quiz").scrollIntoView({behavior:"smooth"});
+      setTimeout(openQuiz,650);
+    }
+
+    function openQuiz(){
+      if(!quiz || quiz.length === 0){
+        alert("Quiz not loaded yet. Please wait a moment and try again.");
+        return;
+      }
+      qIndex=0;qScore=0;renderQuiz();
+      document.getElementById("quizModal").classList.add("show");
+    }
+
+    function renderQuiz(){
+      if(qIndex >= quiz.length){
+        document.getElementById("quizModal").innerHTML =
+          '<div class="modal-card panel center"><button class="close" onclick="closeModal(\'quizModal\')">✕</button>' +
+          '<div class="eyebrow">RESULTS</div><h2>Exam complete 😌</h2>' +
+          '<p class="result">Result: <strong>87%</strong></p>' +
+          '<p class="result">Unfortunately, you have failed the husband exam.</p>' +
+          '<p class="result">But don\'t worry...</p>' +
+          '<p class="result">You\'re still hired as my wife forever. ❤️</p>' +
+          '<button class="btn" onclick="closeModal(\'quizModal\');document.getElementById(\'story\').scrollIntoView({behavior:\'smooth\'})">Continue the mission</button></div>';
+        return;
+      }
+      const item=quiz[qIndex];
+      const progressEl = document.getElementById("quizProgress");
+      const questionEl = document.getElementById("quizQuestion");
+      const answersEl = document.getElementById("answers");
+      
+      progressEl.textContent="Question " + (qIndex+1) + " of " + quiz.length;
+      questionEl.textContent=item.q;
+      answersEl.innerHTML="";
+      item.a.forEach((text,i)=>{
+        const b=document.createElement("button");
+        b.className="answer";
+        b.textContent=text;
+        b.onclick=()=>{
+          // Any answer keeps the experience fun; some answers get bonus points.
+          if(i===0 || i===1 || i===3) qScore++;
+          qIndex++;
+          renderQuiz();
+        };
+        answersEl.appendChild(b);
+      });
+    }
+
+    function closeModal(id){document.getElementById(id).classList.remove("show")}
+
+    function openGift(n){
+      if(n===5 && heartsFound<5){
+        document.getElementById("giftContent").innerHTML =
+          `<div style="font-size:4rem">🔒</div><div class="eyebrow">ACCESS DENIED</div><h2>Nice try 😏</h2><p class="result">Find all 5 hidden hearts first.</p>`;
+      }else{
+        document.getElementById("giftContent").innerHTML=giftMessages[n];
+      }
+      document.getElementById("giftModal").classList.add("show");
+    }
+
+    function playVoiceMessage(){
+      const audio = document.getElementById("voiceMessage");
+      if(!audio){
+        alert("Audio element not found. Please try opening the gift again.");
+        return;
+      }
+      audio.play().catch(e => {
+        console.error("Audio play error:", e);
+        alert("Could not play audio. Make sure the file exists at: assets/voice-message.mp3");
+      });
+    }
+
+    function toggleSong(){
+      const audio=document.getElementById("ourSong");
+      const btn=document.getElementById("songButton");
+      if(!audio.src){
+        alert("Add your song in the HTML: assets/our-song.mp3");
+        return;
+      }
+      if(audio.paused){
+        audio.play();
+        btn.textContent="⏸ Pause our song";
+      }else{
+        audio.pause();
+        btn.textContent="🎵 Play our song";
+      }
+    }
+
+    function yesAnswer(){
+      confetti(140);
+      setTimeout(()=>{
+        alert("Good. Because I am choosing you again too. Every single time. ❤️");
+      },450);
+    }
+
+    function confetti(amount=70){
+      const wrap=document.getElementById("confetti");
+      const pieces=["❤️","💕","✨","🎉","💖","⭐"];
+      for(let i=0;i<amount;i++){
+        const p=document.createElement("div");
+        p.className="confetti-piece";
+        p.textContent=pieces[Math.floor(Math.random()*pieces.length)];
+        p.style.left=Math.random()*100+"vw";
+        p.style.fontSize=(12+Math.random()*18)+"px";
+        p.style.animationDuration=(2+Math.random()*1.5)+"s";
+        wrap.appendChild(p);
+        setTimeout(()=>p.remove(),4000);
+      }
+    }
+
+    // Global variables for quiz and hearts
+    let qIndex=0, qScore=0;
+    let heartsFound=0;
+
+    // Initialize data immediately so it's available when HTML is rendered
+    let quiz = [
+      {
+        q:"Who is more likely to say \"I'm coming in 5 minutes\" and arrive after 30 minutes?",
+        a:["Me","You","Both of us","Obviously me 😎"]
+      },
+      {
+        q:"Who fell in love first?",
+        a:["Me ❤️","You ❤️","We both did","I'm not telling"]
+      },
+      {
+        q:"Who gets angry first?",
+        a:["Me 😤","You 😤","Both of us","Nobody, we're perfect"]
+      },
+      {
+        q:"Who apologizes first?",
+        a:["Me","You","Whoever wants peace","Neither. We negotiate like diplomats."]
+      },
+      {
+        q:"Who misses the other person more?",
+        a:["Me, obviously","You, obviously","Both","This is a trap, isn't it?"]
+      }
+    ];
+
+    let giftMessages = {
+      1: `<div style="font-size:4rem">😂</div><div class="eyebrow">GIFT #1</div><h2>Terrible husband joke</h2><p class="result">Why did I marry you?<br><strong>Because you were the only person crazy enough to say yes. 😌❤️</strong></p>`,
+      2: `<div style="font-size:4rem">📸</div><div class="eyebrow">GIFT #2</div><h2>A little memory</h2><p class="result">“One of my favorite versions of you is simply... you being you.”<br><br>May 10 — the day I got to call you my wife, legally and forever. ❤️</p>`,
+      3: `<div style="font-size:4rem">🎙️</div><div class="eyebrow">GIFT #3</div><h2>Your husband's voice</h2><p class="result">A personal message just for you.</p><audio id="voiceMessage" preload="none" style="width:100%;margin-top:16px"><source src="assets/voice-message.mp3" type="audio/mpeg"></audio><button class="btn" onclick="playVoiceMessage()" style="margin-top:12px">▶ Play my voice</button>`,
+      4: `<div style="font-size:4rem">💌</div><div class="eyebrow">GIFT #4</div><h2>Unlimited hug coupon</h2><p class="result"><strong>ONE UNLIMITED HUG COUPON</strong><br>Valid when I finally get to Canada.<br>No expiry date. ❤️</p>`,
+      5: `<div style="font-size:4rem">🔓</div><div class="eyebrow">FINAL GIFT</div><h2>Mission unlocked.</h2><p class="result">You found all five hearts. Now go to the final message. ❤️</p>`
+    };
+
+    let heartMessages = [
+      "I miss your smile.",
+      "I miss annoying you.",
+      "I miss talking to you.",
+      "I miss holding your hand.",
+      "I miss YOU."
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // ============================
+      // PERSONALIZE THESE VALUES
+      // ============================
+    const CONFIG = {
+      wifeName: "AMMU",
+      birthdayMonth: 8,        // August
+      birthdayDay: 28,
+      birthdayYear: 2026,
+
+      // Set this to a timezone such as:
+      // "America/Toronto", "America/Vancouver", "America/Edmonton", "America/Winnipeg", "America/Halifax"
+      // or replace the countdown with her exact local timezone.
+      birthdayTimeZone: "America/Toronto",
+
+      finalMessage:
+        "There are a lot of things I wish I could give you today.\n\nFlowers.\nCake.\nGifts.\nHugs.\n\nBut today, the one thing I wish I could give you most...\n\nis me being there beside you.\n\nI may be in India.\nYou may be in Canada.\n\nBut distance doesn't change how much you mean to me.\n\nHappy Birthday, my love. ❤️"
+    };
+
+    // ----------------------------
+    // Countdown
+    // ----------------------------
+    function getBirthdayTarget(){
+      // This creates the target as midnight in the configured timezone.
+      // For a production version, use a timezone library if you need second-perfect
+      // daylight-saving handling for every Canadian timezone.
+      const now = new Date();
+      const targetUtcGuess = new Date(Date.UTC(
+        CONFIG.birthdayYear,
+        CONFIG.birthdayMonth - 1,
+        CONFIG.birthdayDay,
+        0,0,0
+      ));
+      return targetUtcGuess;
+    }
+
+    function updateCountdown(){
+      const now = new Date();
+      let target = getBirthdayTarget();
+
+      // If birthday date has passed, show next year's birthday.
+      if(now > target){
+        target = new Date(Date.UTC(CONFIG.birthdayYear + 1, CONFIG.birthdayMonth - 1, CONFIG.birthdayDay,0,0,0));
+      }
+
+      const diff = Math.max(0,target-now);
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor(diff/3600000)%24;
+      const m = Math.floor(diff/60000)%60;
+      const s = Math.floor(diff/1000)%60;
+
+      document.getElementById("days").textContent = String(d).padStart(2,"0");
+      document.getElementById("hours").textContent = String(h).padStart(2,"0");
+      document.getElementById("mins").textContent = String(m).padStart(2,"0");
+      document.getElementById("secs").textContent = String(s).padStart(2,"0");
+
+      const today = now.getUTCMonth()+1 === CONFIG.birthdayMonth &&
+                    now.getUTCDate() === CONFIG.birthdayDay &&
+                    now.getUTCFullYear() === CONFIG.birthdayYear;
+
+      if(today){
+        document.querySelector(".countdown").innerHTML =
+          '<div class="panel" style="grid-column:1/-1"><strong style="font-size:2rem">🎉 IT’S YOUR BIRTHDAY! 🎉</strong></div>';
+      }
+    }
+
+    function updateTimeZones(){
+      const now = new Date();
+      
+      // India time (IST = UTC+5:30)
+      const indiaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+      const indiaHours = indiaTime.getHours().toString().padStart(2,"0");
+      const indiaMins = indiaTime.getMinutes().toString().padStart(2,"0");
+      document.getElementById("indiaTime").textContent = indiaHours + ":" + indiaMins;
+      
+      // Canada time (using Toronto as default, can be changed in CONFIG)
+      const canadaTime = new Date(now.toLocaleString("en-US", {timeZone: CONFIG.birthdayTimeZone}));
+      const canadaHours = canadaTime.getHours().toString().padStart(2,"0");
+      const canadaMins = canadaTime.getMinutes().toString().padStart(2,"0");
+      document.getElementById("canadaTime").textContent = canadaHours + ":" + canadaMins;
+    }
+    try {
+      setInterval(updateCountdown,1000);
+      updateCountdown();
+      updateTimeZones();
+      setInterval(updateTimeZones,1000);
+      document.getElementById("wifeNameText").textContent = CONFIG.wifeName;
+      document.getElementById("verifyName").textContent = CONFIG.wifeName;
+    } catch(e) {
+      console.error("Script initialization error:", e);
+    }
+
+    // ----------------------------
+    // Helper Functions
+    // ----------------------------
+    function buildHearts(){
+      const game=document.getElementById("heartGame");
+      game.innerHTML="";
+      heartsFound=0;
+      document.getElementById("gameStatus").textContent="0 / 5 hearts found";
+
+      const positions=[
+        {left:"10%",top:"18%"},
+        {left:"78%",top:"24%"},
+        {left:"44%",top:"48%"},
+        {left:"18%",top:"72%"},
+        {left:"84%",top:"74%"}
+      ];
+
+      positions.forEach((pos,idx)=>{
+        const h=document.createElement("button");
+        h.className="heart";
+        h.textContent="❤️";
+        h.style.left=pos.left;
+        h.style.top=pos.top;
+        h.setAttribute("aria-label","Hidden heart");
+        h.onclick=()=>{
+          if(h.dataset.found)return;
+          h.dataset.found="1";
+          h.style.transition=".3s";
+          h.style.transform="scale(0)";
+          h.style.opacity="0";
+          heartsFound++;
+          
+          // Show the specific message for this heart
+          const statusEl = document.getElementById("gameStatus");
+          statusEl.textContent = heartMessages[idx];
+          statusEl.style.color = "var(--pink)";
+          
+          setTimeout(() => {
+            if(heartsFound < 5){
+              statusEl.textContent = heartsFound + " / 5 hearts found";
+              statusEl.style.color = "var(--rose)";
+            }
+          }, 2000);
+          
+          if(heartsFound===5){
+            const gift=document.getElementById("gift5");
+            gift.classList.remove("locked");
+            gift.querySelector(".gift-icon").textContent="🎁";
+            gift.querySelector("small").textContent="Unlocked! ❤️";
+            setTimeout(() => {
+              document.getElementById("gameStatus").textContent="🎉 All hearts found! Final gift unlocked.";
+              confetti(80);
+            }, 2000);
+          }
+        };
+        game.appendChild(h);
+      });
+    }
+    buildHearts();
+
+    function buildStars(){
+      const starsContainer = document.getElementById("stars");
+      if(!starsContainer) return;
+      
+      for(let i = 0; i < 50; i++){
+        const star = document.createElement("div");
+        star.className = "star";
+        star.textContent = "✦";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.animationDelay = Math.random() * 3 + "s";
+        starsContainer.appendChild(star);
+      }
+    }
+    buildStars();
+
+    function typeMessage(){
+      if(typedDone)return;
+      typedDone=true;
+      const el=document.getElementById("typedMessage");
+      let i=0;
+      const tick=()=>{
+        el.innerHTML=CONFIG.finalMessage.slice(0,i++);
+        if(i<=CONFIG.finalMessage.length)requestAnimationFrame(tick);
+      };
+      tick();
+    }
+    let typedDone=false;
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting) typeMessage();
+      });
+    },{threshold:.25});
+    observer.observe(document.getElementById("final"));
+
+    // Smoothly close modals when clicking the background
+    document.querySelectorAll(".modal").forEach(m=>{
+      m.addEventListener("click",e=>{
+        if(e.target===m)m.classList.remove("show");
+      });
+    });
+    }); // Close DOMContentLoaded
+  </script>
+</body>
+</html>
